@@ -52,10 +52,29 @@ compare({
   }
 }, '/[[* = :?] = :?] and /[[* = :?] = :?]', ['a', 1, 'text', 'one'], [testData[0]]);
 
+// compare({
+//   query: {
+//     a: {
+//       $exists: false
+//     },
+//     text: 'one'
+//   }
+// }, '/[[* = :?] = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], []);
+
+compare({
+  query: {
+    a: {
+      $exists: true
+    },
+    text: 'one'
+  }
+}, '/[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], [testData[0]]);
+
+
 compareError({
   query: {
     b: {
       $invalidCompare: 1
     }
   }
-}, 'token "$invalidCompare" is not valid. must be ["$eq","$ne","$gt","$gte","$lt","$lte"]');
+}, 'token "$invalidCompare" is not valid. must be ["$eq","$ne","$gt","$gte","$lt","$lte","$exists"]');
