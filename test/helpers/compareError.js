@@ -1,0 +1,17 @@
+const tape = require('tape');
+
+const convert = require('../../convert');
+
+function compareError (query, expectedError) {
+  tape('equality > ' + JSON.stringify(query), async t => {
+    t.plan(1);
+
+    try {
+      convert(query);
+    } catch (error) {
+      t.equal(error.message, expectedError);
+    }
+  });
+}
+
+module.exports = compareError;

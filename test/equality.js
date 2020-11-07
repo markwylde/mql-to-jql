@@ -1,4 +1,5 @@
 const compare = require('./helpers/compare');
+const compareError = require('./helpers/compareError');
 const testData = compare.testData;
 
 compare({}, '/*', [], testData);
@@ -19,6 +20,22 @@ compare({
 
 compare({
   query: {
+    c: {
+      $gt: 2
+    }
+  }
+}, '/[[* = :?] > :?]', ['c', 2], [testData[2]]);
+
+compare({
+  query: {
+    b: {
+      $lt: 3
+    }
+  }
+}, '/[[* = :?] < :?]', ['b', 3], [testData[1]]);
+
+compare({
+  query: {
     a: {
       $ne: 2
     },
@@ -34,3 +51,11 @@ compare({
     text: 'one'
   }
 }, '/[[* = :?] = :?] and /[[* = :?] = :?]', ['a', 1, 'text', 'one'], [testData[0]]);
+
+compareError({
+  query: {
+    b: {
+      $invalidCompare: 1
+    }
+  }
+}, 'token "$invalidCompare" is not valid. must be ["$eq","$ne","$gt","$gte","$lt","$lte"]');

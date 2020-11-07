@@ -34,16 +34,34 @@ function parseQuery (query) {
 
     values.push(key);
 
-    if (query[key].$eq) {
-      fields.push('/[[* = :?] = :?]');
-      values.push(query[key].$eq);
-    } else if (query[key].$ne) {
-      fields.push('/[[* = :?] != :?]');
-      values.push(query[key].$ne);
-    } else {
+    function parseEquality (value, token, mql) {
+      if (!value[token]) {
+        return;
+      }
+
+      fields.push(mql);
+      values.push(value[token]);
+    }
+
+    if (typeof query[key] !== 'object') {
       fields.push('/[[* = :?] = :?]');
       values.push(query[key]);
+    } else {
+      const allowed = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte'];
+
+      Object.keys(query[key]).forEach(key => {
+        if (!allowed.includes(key)) {
+          throw new Error(`token "${key}" is not valid. must be ${JSON.stringify(allowed)}`);
+        }
+      });
     }
+
+    parseEquality(query[key], '$eq', '/[[* = :?] = :?]');
+    parseEquality(query[key], '$ne', '/[[* = :?] != :?]');
+    parseEquality(query[key], '$gt', '/[[* = :?] > :?]');
+    parseEquality(query[key], '$gte', '/[[* = :?] >= :?]');
+    parseEquality(query[key], '$lt', '/[[* = :?] < :?]');
+    parseEquality(query[key], '$lte', '/[[* = :?] <= :?]');
   });
 
   return {
