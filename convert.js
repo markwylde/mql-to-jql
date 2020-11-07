@@ -32,10 +32,19 @@ function parseQuery (query) {
       return;
     }
 
-    fields.push('/[[* = :?] = :?]');
-    values.push(key);
-
-    values.push(query[key]);
+    if (query[key].$eq) {
+      fields.push('/[[* = :?] = :?]');
+      values.push(key);
+      values.push(query[key].$ne);
+    } else if (query[key].$ne) {
+      fields.push('/[[* = :?] != :?]');
+      values.push(key);
+      values.push(query[key].$ne);
+    } else {
+      fields.push('/[[* = :?] = :?]');
+      values.push(key);
+      values.push(query[key]);
+    }
   });
 
   return {
