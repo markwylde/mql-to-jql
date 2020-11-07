@@ -1,7 +1,7 @@
 const tape = require('tape');
 const { EJDB2 } = require('ejdb2_node');
 
-const convert = require('../../');
+const convert = require('../../convert');
 const createQuery = require('../../createQuery');
 
 const testData = [
