@@ -19,6 +19,15 @@ const query = convert({
   ]
 });
 
+/*
+You can use query by sending it straight to ejdb.
+query === {
+  mql: '(/[[* = :?] = :?] or /[[* = :?] = :?])',
+  values: ['a', 1, 'a', 5]
+}
+*/
+
+// OR you can use the createQuery helper to do it for you
 const q = createQuery(db, 'testCollection', query);
 const records = await q.list();
 
