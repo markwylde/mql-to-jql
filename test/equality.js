@@ -9,13 +9,24 @@ compare({
   }
 }, '/[[* = :?] = :?]', ['a', 1], [testData[0]]);
 
-// compare({
-//   query: {
-//     a: {
-//       $ne: 1
-//     }
-//   }
-// }, '/[[* = :?] != :?]', ['a', 1], [testData[1], testData[2]]);
+compare({
+  query: {
+    a: {
+      $ne: 2
+    }
+  }
+}, '/[[* = :?] != :?]', ['a', 2], [testData[0]]);
+
+compare({
+  query: {
+    a: {
+      $ne: 2
+    },
+    text: {
+      $ne: 'two'
+    }
+  }
+}, '/[[* = :?] != :?] and /[[* = :?] != :?]', ['a', 2, 'text', 'two'], [testData[0]]);
 
 compare({
   query: {
