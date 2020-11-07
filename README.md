@@ -6,9 +6,14 @@
 
 Convert mql syntax to jql to query ejdb databases
 
+## Installation
+```bash
+npm install --save mql-to-jql
+```
+
 ## Example usage
 ```javascript
-const convert = require('mql-to-jql')
+const convert = require('mql-to-jql/convert')
 const createQuery = require('mql-to-jql/createQuery')
 
 const db = await EJDB2.open('./example.db', { truncate: true });
