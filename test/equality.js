@@ -52,14 +52,14 @@ compare({
   }
 }, '/[[* = :?] = :?] and /[[* = :?] = :?]', ['a', 1, 'text', 'one'], [testData[0]]);
 
-// compare({
-//   query: {
-//     a: {
-//       $exists: false
-//     },
-//     text: 'one'
-//   }
-// }, '/[[* = :?] = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], []);
+compare({
+  query: {
+    a: {
+      $exists: false
+    },
+    text: 'one'
+  }
+}, '/* and not /[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], []);
 
 compare({
   query: {

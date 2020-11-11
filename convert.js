@@ -65,7 +65,7 @@ function parseQuery (query) {
     if (query[key].$exists === true) {
       fields.push('/[* = :?]');
     } else if (query[key].$exists === false) {
-      // fields.push('/[[* = :?]]');
+      fields.push('/* and not /[* = :?]');
     }
   });
 
