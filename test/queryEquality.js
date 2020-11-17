@@ -70,7 +70,6 @@ compare({
   }
 }, '/[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], [testData[0]]);
 
-
 compareError({
   query: {
     b: {

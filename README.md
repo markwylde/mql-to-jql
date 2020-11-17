@@ -18,10 +18,17 @@ const createQuery = require('mql-to-jql/createQuery')
 
 const db = await EJDB2.open('./example.db', { truncate: true });
 const query = convert({
-  $or: [
-    { a: 1 },
-    { a: 5 },
-  ]
+  fields: [
+    'firstName',
+    'lastName'
+  ],
+
+  query: {
+    $or: [
+      { a: 1 },
+      { a: 5 },
+    ]
+  }
 });
 
 /*
