@@ -28,7 +28,12 @@ const query = convert({
       { a: 1 },
       { a: 5 },
     ]
-  }
+  },
+
+  order: [
+    'asc(firstName)',
+    'desc(lastName)'
+  ]
 });
 
 /*
