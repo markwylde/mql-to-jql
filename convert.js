@@ -141,10 +141,33 @@ function convert (options) {
   result.mql = result.mql.concat(fields.mql);
   result.values = result.values.concat(fields.values);
 
+  let optionsAlreadyStarted;
   const order = parseOrder(options.order);
   result.mql = result.mql.concat(order.mql);
   result.values = result.values.concat(order.values);
+  optionsAlreadyStarted = optionsAlreadyStarted || order.mql.length > 0;
 
+  if (options.skip !== undefined) {
+    if (!Number.isInteger(options.skip)) {
+      throw new Error(`skip must be a number but received "${options.skip}"`);
+    }
+    !optionsAlreadyStarted && result.mql.push(' | ');
+    result.mql.push(`skip ${options.skip} `);
+    optionsAlreadyStarted = true;
+  }
+
+  if (options.limit !== undefined) {
+    if (!Number.isInteger(options.limit)) {
+      throw new Error(`limit must be a number but received "${options.limit}"`);
+    }
+    !optionsAlreadyStarted && result.mql.push(' | ');
+    result.mql.push(`limit ${options.limit} `);
+    optionsAlreadyStarted = true;
+  }
+  console.log({
+    mql: result.mql.join('').trim(),
+    values: result.values
+  });
   return {
     mql: result.mql.join('').trim(),
     values: result.values

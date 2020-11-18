@@ -33,7 +33,10 @@ const query = convert({
   order: [
     'asc(firstName)',
     'desc(lastName)'
-  ]
+  ],
+
+  limit: 10,
+  skip: 100
 });
 
 /*
