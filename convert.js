@@ -90,7 +90,39 @@ function parseFields (fields) {
   });
 
   return {
-    mql: `| /{${fields.join(',')}}`,
+    mql: ` | /{${fields.join(',')}}`,
+    values: []
+  };
+}
+
+function parseOrder (order) {
+  if (!order) {
+    return {
+      mql: '',
+      values: []
+    };
+  }
+
+  order.forEach(item => {
+    if (item.includes('{') || item.includes('}') || item.includes(',') || item.includes('|') || item.includes(' ')) {
+      throw new Error(`order "${item}" can not include brackets, commas, pipes or spaces`);
+    }
+  });
+
+  const parsedOrder = order.map(item => {
+    const splitted = item.split('(');
+    const direction = splitted[0];
+    const field = splitted[1].slice(0, -1);
+
+    if (!['asc', 'desc'].includes(direction)) {
+      throw new Error(`order "${item}" has an unknown sort direction of "${direction}"`);
+    }
+
+    return `${direction} /${field}`;
+  });
+
+  return {
+    mql: ` | ${parsedOrder.join(' ')}`,
     values: []
   };
 }
@@ -109,8 +141,12 @@ function convert (options) {
   result.mql = result.mql.concat(fields.mql);
   result.values = result.values.concat(fields.values);
 
+  const order = parseOrder(options.order);
+  result.mql = result.mql.concat(order.mql);
+  result.values = result.values.concat(order.values);
+
   return {
-    mql: result.mql.join(' ').trim(),
+    mql: result.mql.join('').trim(),
     values: result.values
   };
 }
