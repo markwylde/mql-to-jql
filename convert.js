@@ -164,10 +164,6 @@ function convert (options) {
     result.mql.push(`limit ${options.limit} `);
     optionsAlreadyStarted = true;
   }
-  console.log({
-    mql: result.mql.join('').trim(),
-    values: result.values
-  });
   return {
     mql: result.mql.join('').trim(),
     values: result.values
