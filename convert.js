@@ -75,6 +75,26 @@ function parseQuery (query) {
   };
 }
 
+function parseFields (fields) {
+  if (!fields) {
+    return {
+      mql: '',
+      values: []
+    };
+  }
+
+  fields.forEach(field => {
+    if (field.includes('{') || field.includes('}') || field.includes(',')) {
+      throw new Error(`field "${field}" can not include brackets or commas`);
+    }
+  });
+
+  return {
+    mql: `| /{${fields.join(',')}}`,
+    values: []
+  };
+}
+
 function convert (options) {
   const result = {
     mql: [],
@@ -85,8 +105,12 @@ function convert (options) {
   result.mql = result.mql.concat(query.mql);
   result.values = result.values.concat(query.values);
 
+  const fields = parseFields(options.fields);
+  result.mql = result.mql.concat(fields.mql);
+  result.values = result.values.concat(fields.values);
+
   return {
-    mql: result.mql.join(' '),
+    mql: result.mql.join(' ').trim(),
     values: result.values
   };
 }

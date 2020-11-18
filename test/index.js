@@ -1,2 +1,3 @@
-require('./equality');
-require('./conditions');
+require('./queryEquality');
+require('./queryConditions');
+require('./fields');
