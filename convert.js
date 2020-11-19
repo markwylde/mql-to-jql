@@ -47,7 +47,7 @@ function parseQuery (query) {
       fields.push('/[[* = :?] = :?]');
       values.push(query[key]);
     } else {
-      const allowed = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$exists'];
+      const allowed = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$exists', '$null'];
 
       Object.keys(query[key]).forEach(key => {
         if (!allowed.includes(key)) {
@@ -65,6 +65,11 @@ function parseQuery (query) {
     if (query[key].$exists === true) {
       fields.push('/[* = :?]');
     } else if (query[key].$exists === false) {
+      fields.push('/* and not /[* = :?]');
+    }
+    if (query[key].$null === true) {
+      fields.push('/[* = :?]');
+    } else if (query[key].$null === false) {
       fields.push('/* and not /[* = :?]');
     }
   });
