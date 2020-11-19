@@ -23,6 +23,8 @@ const query = convert({
     'lastName'
   ],
 
+ // The following equality operators are implemented:
+ // '$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$exists', '$null', '$in', '$nin'
   query: {
     $or: [
       { a: 1 },

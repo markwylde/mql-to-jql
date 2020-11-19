@@ -88,10 +88,26 @@ compare({
   }
 }, '/[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], [testData[0]]);
 
+compare({
+  query: {
+    text: {
+      $in: ['two', 'three']
+    }
+  }
+}, '/[[* = :?] in ["two","three"]]', ['text'], [testData[1], testData[2]]);
+
+compare({
+  query: {
+    text: {
+      $nin: ['two', 'three']
+    }
+  }
+}, '/[[* = :?] not in ["two","three"]]', ['text'], [testData[0]]);
+
 compareError({
   query: {
     b: {
       $invalidCompare: 1
     }
   }
-}, 'token "$invalidCompare" is not valid. must be ["$eq","$ne","$gt","$gte","$lt","$lte","$exists","$null"]');
+}, 'token "$invalidCompare" is not valid. must be ["$eq","$ne","$gt","$gte","$lt","$lte","$exists","$null","$in","$nin"]');
