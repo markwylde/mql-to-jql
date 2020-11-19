@@ -1,4 +1,4 @@
-const tape = require('tape');
+const tape = require('basictap');
 
 const convert = require('../../convert');
 

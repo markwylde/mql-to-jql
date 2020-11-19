@@ -73,9 +73,9 @@ function parseQuery (query) {
     } else if (query[key].$exists === false) {
       fields.push('/* and not /[* = :?]');
     }
-    if (query[key].$null === true) {
+    if (query[key].$null === false) {
       fields.push('/[* = :?]');
-    } else if (query[key].$null === false) {
+    } else if (query[key].$null === true) {
       fields.push('/* and not /[* = :?]');
     }
   });

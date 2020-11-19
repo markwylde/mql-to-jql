@@ -1,8 +1,13 @@
-const tape = require('tape');
+const fs = require('fs');
+const tape = require('basictap');
+const uuid = require('uuid').v4;
 const { EJDB2 } = require('ejdb2_node');
 
 const convert = require('../../convert');
 const createQuery = require('../../createQuery');
+
+fs.rmdirSync('./canhazdata', { recursive: true });
+fs.mkdirSync('./canhazdata', { recursive: true });
 
 const testData = [
   { a: 1, text: 'one' },
@@ -13,7 +18,7 @@ const testData = [
 function compare (query, expected, values, output) {
   tape('equality > ' + JSON.stringify(query), async t => {
     t.plan(3);
-    const db = await EJDB2.open('./example.db', { truncate: true });
+    const db = await EJDB2.open(`./canhazdata/${uuid()}.db`, { truncate: true });
 
     await db.put('test', { a: 1, text: 'one' });
     await db.put('test', { b: 2, text: 'two' });

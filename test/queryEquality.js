@@ -73,7 +73,7 @@ compare({
 compare({
   query: {
     a: {
-      $null: false
+      $null: true
     },
     text: 'one'
   }
@@ -82,7 +82,7 @@ compare({
 compare({
   query: {
     a: {
-      $null: true
+      $null: false
     },
     text: 'one'
   }
