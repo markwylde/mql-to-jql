@@ -163,7 +163,7 @@ function convert (options) {
       throw new Error(`skip must be a number but received "${options.skip}"`);
     }
     !optionsAlreadyStarted && result.mql.push(' | ');
-    result.mql.push(`skip ${options.skip} `);
+    result.mql.push(` skip ${options.skip} `);
     optionsAlreadyStarted = true;
   }
 
@@ -172,11 +172,11 @@ function convert (options) {
       throw new Error(`limit must be a number but received "${options.limit}"`);
     }
     !optionsAlreadyStarted && result.mql.push(' | ');
-    result.mql.push(`limit ${options.limit} `);
+    result.mql.push(` limit ${options.limit} `);
     optionsAlreadyStarted = true;
   }
   return {
-    mql: result.mql.join('').trim(),
+    mql: result.mql.filter(item => !!item).map(item => item.trim()).join(' ').trim(),
     values: result.values
   };
 }
