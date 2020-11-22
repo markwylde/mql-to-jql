@@ -12,6 +12,12 @@ compare({
 
 compare({
   query: {
+    a: false
+  }
+}, '/[[* = :?] = :?]', ['a', false], []);
+
+compare({
+  query: {
     a: {
       $ne: 2
     }

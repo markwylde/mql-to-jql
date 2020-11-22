@@ -7,6 +7,11 @@ function createQuery (db, collection, { mql, values }) {
       return;
     }
 
+    if (typeof value === 'boolean') {
+      q.setBoolean(index, value);
+      return;
+    }
+
     if (typeof value === 'number') {
       q.setNumber(index, value);
     }

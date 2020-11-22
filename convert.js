@@ -175,6 +175,7 @@ function convert (options) {
     result.mql.push(` limit ${options.limit} `);
     optionsAlreadyStarted = true;
   }
+
   return {
     mql: result.mql.filter(item => !!item).map(item => item.trim()).join(' ').trim(),
     values: result.values
