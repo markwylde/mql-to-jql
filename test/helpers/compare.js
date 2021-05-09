@@ -1,7 +1,7 @@
 const fs = require('fs');
 const tape = require('basictap');
 const uuid = require('uuid').v4;
-const { EJDB2 } = require('ejdb2_node');
+const { EJDB2 } = require('node-ejdb-lite');
 
 const convert = require('../../convert');
 const createQuery = require('../../createQuery');

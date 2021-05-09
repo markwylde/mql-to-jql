@@ -1,5 +1,5 @@
 function parseQuery (query) {
-  if (!query) {
+  if (!query || Object.keys(query).length === 0) {
     return {
       mql: '/*',
       values: []

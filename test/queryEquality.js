@@ -5,6 +5,10 @@ const testData = compare.testData;
 compare({}, '/*', [], testData);
 
 compare({
+  query: {}
+}, '/*', [], testData);
+
+compare({
   query: {
     a: 1
   }
