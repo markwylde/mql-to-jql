@@ -6,23 +6,25 @@ const { EJDB2 } = require('node-ejdb-lite');
 const convert = require('../../convert');
 const createQuery = require('../../createQuery');
 
-fs.rmdirSync('./canhazdata', { recursive: true });
+try {
+  fs.rmdirSync('./canhazdata', { recursive: true });
+} catch (error) {}
 fs.mkdirSync('./canhazdata', { recursive: true });
 
-const testData = [
+const defaultTestData = [
   { a: 1, text: 'one' },
   { b: 2, text: 'two' },
   { c: 3, text: 'three' }
 ];
 
-function compare (query, expected, values, output) {
+function compare (query, expected, values, output, testData = defaultTestData) {
   tape('equality > ' + JSON.stringify(query), async t => {
     t.plan(3);
     const db = await EJDB2.open(`./canhazdata/${uuid()}.db`, { truncate: true });
 
-    await db.put('test', { a: 1, text: 'one' });
-    await db.put('test', { b: 2, text: 'two' });
-    await db.put('test', { c: 3, text: 'three' });
+    for (const item of testData) {
+      await db.put('test', item);
+    }
 
     const result = convert(query);
 
@@ -38,6 +40,6 @@ function compare (query, expected, values, output) {
   });
 }
 
-compare.testData = testData;
+compare.testData = defaultTestData;
 
 module.exports = compare;

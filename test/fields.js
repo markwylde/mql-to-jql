@@ -16,16 +16,16 @@ compareError({
   fields: [
     'text{'
   ]
-}, 'field "text{" can not include brackets or commas');
+}, 'key "text{" contains an invalid character');
 
 compareError({
   fields: [
     'tex}t'
   ]
-}, 'field "tex}t" can not include brackets or commas');
+}, 'key "tex}t" contains an invalid character');
 
 compareError({
   fields: [
     ',text'
   ]
-}, 'field ",text" can not include brackets or commas');
+}, 'key ",text" contains an invalid character');
