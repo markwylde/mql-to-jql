@@ -9,6 +9,7 @@ function compareError (query, expectedError) {
     try {
       convert(query);
     } catch (error) {
+      console.log('asssss', error);
       t.equal(error.message, expectedError);
     }
   });
