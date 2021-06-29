@@ -10,15 +10,34 @@ compare({
 
 compare({
   query: {
-    a: 1
+    'a1.0': 1
   }
-}, '/[[* = :?] = :?]', ['a', 1], [testData[0]]);
+}, '/a1/[0 = :?]', [1], [
+  { a1: [1] },
+  { a1: [1, 2] }
+], [
+  { a1: [1] },
+  { a1: [1, 2] },
+  { a2: [1] }
+]);
+
+compare({
+  query: {
+    'a1.b.c.0': 1
+  }
+}, '/a1/b/c/[0 = :?]', [1], [
+  { a1: { b: { c: [1] } } }
+], [
+  { a1: { b: { c: [1] } } },
+  { a1: { b: { c: [2] } } },
+  { a1: { b: { d: [1] } } }
+]);
 
 compare({
   query: {
     a: false
   }
-}, '/[[* = :?] = :?]', ['a', false], []);
+}, '/[a = :?]', [false], []);
 
 compare({
   query: {
@@ -26,7 +45,7 @@ compare({
       $ne: 2
     }
   }
-}, '/[[* = :?] != :?]', ['a', 2], [testData[0]]);
+}, '/[a != :?]', [2], [testData[0]]);
 
 compare({
   query: {
@@ -34,7 +53,7 @@ compare({
       $gt: 2
     }
   }
-}, '/[[* = :?] > :?]', ['c', 2], [testData[2]]);
+}, '/[c > :?]', [2], [testData[2]]);
 
 compare({
   query: {
@@ -42,7 +61,7 @@ compare({
       $lt: 3
     }
   }
-}, '/[[* = :?] < :?]', ['b', 3], [testData[1]]);
+}, '/[b < :?]', [3], [testData[1]]);
 
 compare({
   query: {
@@ -53,14 +72,14 @@ compare({
       $ne: 'two'
     }
   }
-}, '/[[* = :?] != :?] and /[[* = :?] != :?]', ['a', 2, 'text', 'two'], [testData[0]]);
+}, '/[a != :?] and /[text != :?]', [2, 'two'], [testData[0]]);
 
 compare({
   query: {
     a: 1,
     text: 'one'
   }
-}, '/[[* = :?] = :?] and /[[* = :?] = :?]', ['a', 1, 'text', 'one'], [testData[0]]);
+}, '/[a = :?] and /[text = :?]', [1, 'one'], [testData[0]]);
 
 compare({
   query: {
@@ -69,7 +88,7 @@ compare({
     },
     text: 'one'
   }
-}, '/* and not /[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], []);
+}, '/* and not /a and /[text = :?]', ['one'], []);
 
 compare({
   query: {
@@ -78,7 +97,7 @@ compare({
     },
     text: 'one'
   }
-}, '/[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], [testData[0]]);
+}, '/a and /[text = :?]', ['one'], [testData[0]]);
 
 compare({
   query: {
@@ -87,7 +106,7 @@ compare({
     },
     text: 'one'
   }
-}, '/* and not /[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], []);
+}, '/* and not /a and /[text = :?]', ['one'], []);
 
 compare({
   query: {
@@ -96,7 +115,7 @@ compare({
     },
     text: 'one'
   }
-}, '/[* = :?] and /[[* = :?] = :?]', ['a', 'text', 'one'], [testData[0]]);
+}, '/a and /[text = :?]', ['one'], [testData[0]]);
 
 compare({
   query: {
@@ -104,7 +123,7 @@ compare({
       $in: ['two', 'three']
     }
   }
-}, '/[[* = :?] in ["two","three"]]', ['text'], [testData[1], testData[2]]);
+}, '/[text in ["two","three"]]', [], [testData[1], testData[2]]);
 
 compare({
   query: {
@@ -112,7 +131,7 @@ compare({
       $nin: ['two', 'three']
     }
   }
-}, '/[[* = :?] not in ["two","three"]]', ['text'], [testData[0]]);
+}, '/[text not in ["two","three"]]', [], [testData[0]]);
 
 compareError({
   query: {

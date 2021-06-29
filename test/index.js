@@ -3,3 +3,4 @@ require('./queryConditions');
 require('./fields');
 require('./order');
 require('./seeking');
+require('./escaping');

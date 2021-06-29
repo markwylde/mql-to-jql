@@ -1,3 +1,17 @@
+function sanitiseInput (string) {
+  const escapedString = string
+    .replace(/[,*+\-?^${}()|[\]\\]/g, '\\$&');
+
+  // Ideally, we would just return the sanitised string
+  // Waiting for a resolution in ejdb:
+  // https://github.com/Softmotions/ejdb/issues/322
+  if (escapedString !== string) {
+    throw new Error(`key "${string}" contains an invalid character`);
+  }
+
+  return string;
+}
+
 function parseQuery (query) {
   if (!query || Object.keys(query).length === 0) {
     return {
@@ -32,19 +46,31 @@ function parseQuery (query) {
       return;
     }
 
-    values.push(key);
-
-    function parseEquality (value, token, mql) {
-      if (!value[token]) {
+    function parseEquality (queryKey, token, mql) {
+      if (!queryKey[token]) {
         return;
       }
 
       fields.push(mql);
-      values.push(value[token]);
+      values.push(queryKey[token]);
     }
 
+    const queryKeySplit = sanitiseInput(key)
+      .split('.');
+
+    const queryKeyStart = queryKeySplit
+      .reduce((queryKey, part, index, array) => {
+        if (index === array.length - 1) {
+          return queryKey + '[' + part;
+        } else {
+          return queryKey + part + '/';
+        }
+      }, '');
+
+    console.log(queryKeyStart);
+
     if (typeof query[key] !== 'object') {
-      fields.push('/[[* = :?] = :?]');
+      fields.push(`/${queryKeyStart} = :?]`);
       values.push(query[key]);
     } else {
       const allowed = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$exists', '$null', '$in', '$nin'];
@@ -56,27 +82,27 @@ function parseQuery (query) {
       });
     }
 
-    parseEquality(query[key], '$eq', '/[[* = :?] = :?]');
-    parseEquality(query[key], '$ne', '/[[* = :?] != :?]');
-    parseEquality(query[key], '$gt', '/[[* = :?] > :?]');
-    parseEquality(query[key], '$gte', '/[[* = :?] >= :?]');
-    parseEquality(query[key], '$lt', '/[[* = :?] < :?]');
-    parseEquality(query[key], '$lte', '/[[* = :?] <= :?]');
+    parseEquality(query[key], '$eq', `/${queryKeyStart} = :?]`);
+    parseEquality(query[key], '$ne', `/${queryKeyStart} != :?]`);
+    parseEquality(query[key], '$gt', `/${queryKeyStart} > :?]`);
+    parseEquality(query[key], '$gte', `/${queryKeyStart} >= :?]`);
+    parseEquality(query[key], '$lt', `/${queryKeyStart} < :?]`);
+    parseEquality(query[key], '$lte', `/${queryKeyStart} <= :?]`);
     if (query[key].$in) {
-      fields.push(`/[[* = :?] in ${JSON.stringify(query[key].$in)}]`);
+      fields.push(`/${queryKeyStart} in ${JSON.stringify(query[key].$in)}]`);
     }
     if (query[key].$nin) {
-      fields.push(`/[[* = :?] not in ${JSON.stringify(query[key].$nin)}]`);
+      fields.push(`/${queryKeyStart} not in ${JSON.stringify(query[key].$nin)}]`);
     }
     if (query[key].$exists === true) {
-      fields.push('/[* = :?]');
+      fields.push(`/${queryKeyStart.slice(1)}`);
     } else if (query[key].$exists === false) {
-      fields.push('/* and not /[* = :?]');
+      fields.push(`/* and not /${queryKeyStart.slice(1)}`);
     }
     if (query[key].$null === false) {
-      fields.push('/[* = :?]');
+      fields.push(`/${queryKeyStart.slice(1)}`);
     } else if (query[key].$null === true) {
-      fields.push('/* and not /[* = :?]');
+      fields.push(`/* and not /${queryKeyStart.slice(1)}`);
     }
   });
 
@@ -94,14 +120,10 @@ function parseFields (fields) {
     };
   }
 
-  fields.forEach(field => {
-    if (field.includes('{') || field.includes('}') || field.includes(',')) {
-      throw new Error(`field "${field}" can not include brackets or commas`);
-    }
-  });
+  const sanitisedFields = fields.map(sanitiseInput);
 
   return {
-    mql: ` | /{${fields.join(',')}}`,
+    mql: ` | /{${sanitisedFields.join(',')}}`,
     values: []
   };
 }
