@@ -67,8 +67,6 @@ function parseQuery (query) {
         }
       }, '');
 
-    console.log(queryKeyStart);
-
     if (typeof query[key] !== 'object') {
       fields.push(`/${queryKeyStart} = :?]`);
       values.push(query[key]);
