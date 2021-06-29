@@ -1,15 +1,7 @@
 function sanitiseInput (string) {
-  const escapedString = string
-    .replace(/[,*+\-?^${}()|[\]\\]/g, '\\$&');
-
-  // Ideally, we would just return the sanitised string
-  // Waiting for a resolution in ejdb:
-  // https://github.com/Softmotions/ejdb/issues/322
-  if (escapedString !== string) {
-    throw new Error(`key "${string}" contains an invalid character`);
-  }
-
-  return string;
+  return string
+    .replace(/\'/g, "\\'")
+    .replace(/\"/g, '\\"');
 }
 
 function parseQuery (query) {
@@ -61,9 +53,9 @@ function parseQuery (query) {
     const queryKeyStart = queryKeySplit
       .reduce((queryKey, part, index, array) => {
         if (index === array.length - 1) {
-          return queryKey + '[' + part;
+          return queryKey + '[' + `"${part}"`;
         } else {
-          return queryKey + part + '/';
+          return queryKey + `"${part}"` + '/';
         }
       }, '');
 
