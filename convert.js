@@ -1,7 +1,7 @@
 function sanitiseInput (string) {
   return string
-    .replace(/\'/g, "\\'")
-    .replace(/\"/g, '\\"');
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"');
 }
 
 function parseQuery (query) {
@@ -65,9 +65,9 @@ function parseQuery (query) {
     } else {
       const allowed = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$exists', '$null', '$in', '$nin'];
 
-      Object.keys(query[key]).forEach(key => {
-        if (!allowed.includes(key)) {
-          throw new Error(`token "${key}" is not valid. must be ${JSON.stringify(allowed)}`);
+      Object.keys(query[key]).forEach(nkey => {
+        if (!allowed.includes(nkey)) {
+          throw new Error(`key "${key}" has an invalid value of ${JSON.stringify(query[key])}. must be ${JSON.stringify(allowed)}`);
         }
       });
     }

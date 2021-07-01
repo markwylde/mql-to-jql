@@ -1,5 +1,4 @@
 const compare = require('./helpers/compare');
-const compareError = require('./helpers/compareError');
 const testData = compare.testData;
 
 compare({
