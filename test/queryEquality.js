@@ -139,4 +139,4 @@ compareError({
       $invalidCompare: 1
     }
   }
-}, 'token "$invalidCompare" is not valid. must be ["$eq","$ne","$gt","$gte","$lt","$lte","$exists","$null","$in","$nin"]');
+}, 'key "b" has an invalid value of {"$invalidCompare":1}. must be ["$eq","$ne","$gt","$gte","$lt","$lte","$exists","$null","$in","$nin"]');
