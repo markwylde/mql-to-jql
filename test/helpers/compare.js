@@ -1,6 +1,5 @@
 const fs = require('fs');
 const tape = require('basictap');
-const uuid = require('uuid').v4;
 const { EJDB2 } = require('node-ejdb-lite');
 
 const convert = require('../../convert');
@@ -17,10 +16,13 @@ const defaultTestData = [
   { c: 3, text: 'three' }
 ];
 
+let id = 0;
+
 function compare (query, expected, values, output, testData = defaultTestData) {
   tape('equality > ' + JSON.stringify(query), async t => {
     t.plan(3);
-    const db = await EJDB2.open(`./canhazdata/${uuid()}.db`, { truncate: true });
+    id = id + 1;
+    const db = await EJDB2.open(`./canhazdata/compare-${id}.db`, { truncate: true });
 
     for (const item of testData) {
       await db.put('test', item);
